@@ -1,0 +1,36 @@
+2. 무비앱 시리즈 #2 Boiler-Plate & MongoDB 연결 ( 따라하며 배우는 리액트 노드 )
+
+전체적인 틀과 MongoDB 연결
+
+1. Boiler-plate 이용 이유
+ - 더 빠르게 개발을 완성하기 위해서
+ - 이 프로젝트의 중요한 부분을 더욱 집중할 수 있기 위해서
+ - 이미 Boiler-plate를 위한 강의가 찍어져 있기 때문에.
+2. Boiler Plate 다운로드
+ - GIT HUB clone or download (https://github.com/jaewonhimnae/boilerplate-mern-stack)
+3. Boiler Plate 실행 방법
+ - 서버와 클라이언트에서 Dependencies 다운받기
+  - npm install
+ - dev.js 파일 생성
+ - MongoDB 로그인
+ - 클러스터 생성 후, 아이디 비번 생성 후, dev.js 파일에 넣는다!
+---
+npm install 시, ERROR 발생!
+npm error code 1
+npm error path C:\Users\iokl3\OneDrive\문서\0. git\John_Ahn\John_Ahn_Movie_React\1. Dev\boilerplate-mern-stack-master\node_modules\bcrypt
+npm error command failed
+(중략..)
+
+1. 루트 디렉토리의 package-lock.json 을 삭제.
+2. package.json 에서 "bcrypt": "^3.0.6", 를 지우기.
+3. 루트 디렉토리에서 터미널을 열어 npm install 을 실행.
+4. 설치가 완료되면, 터미널에서 npm install bcryptjs --save 를 실행.
+5. bcryptjs를 참조할 수 있도록 server/models/User.js 에서 아래의 구문과 같이 수정 할 것.
+const bcrypt = require('bcryptjs');
+---
+MongoDB 설정
+(server/config/dev.js)
+
+module.exports = {
+    mongoURI:'mongodb+srv://iokl1004:<password>@boilerplate.sepbw.mongodb.net/?retryWrites=true&w=majority&appName=boilerplate'
+}

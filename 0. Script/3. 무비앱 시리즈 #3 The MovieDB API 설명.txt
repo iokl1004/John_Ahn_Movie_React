@@ -1,0 +1,26 @@
+3. 무비앱 시리즈 #3 The MovieDB API 설명 ( 따라하며 배우는 리액트 노드 )
+
+1. The MovideDB Website로 이동
+ - https://www.themoviedb.org/
+2. 가입 후 로그인 & API_KEY 받기
+ - 로그인 후, 프로필 클릭 
+ - 설정 클릭
+ - 좌측 메뉴에 API 클릭
+ - API 키 요청 To generate a new API key, click here.
+ - Developer 클릭
+ - 동의 클릭
+ - 이용형태 : 데스크톱 어플리케이션
+ - 어플리케이션 이름 : MovieApp
+ - 어플리케이션 URL : localhost:3000
+ - 어플리케이션 개요 : 무비앱 API를 이용한 어플리케이션을 만들기
+ - API Key : ecd03b028f62ae8889344a89d717154b
+  - API 보는곳 : https://www.themoviedb.org/settings/api
+3. Text Editor에서 the MovideDB API를 위한 설정
+(client/src/components/Config.js)
+
+//SERVER ROUTES
+export const USER_SERVER = '/api/users';
+
+// 웹 사이트를 만들 때 수월하게 항상 켜지 않아도 이미지와 영화의 정보들을 가져 올 수 있음.
+export const API_URL = 'https://api.themoviedb.org/3/';
+export const IMAGE_BASE_URL = 'http://image.thmdb.org/t/p/'

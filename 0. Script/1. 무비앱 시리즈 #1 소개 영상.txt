@@ -1,0 +1,14 @@
+1. 무비앱 시리즈 #1 소개 영상 ( 따라하며 배우는 리액트 노드 )
+
+기능구현
+1. Sign up
+2. Login With JWT
+3. Fetch Movie Datas
+4. Load More
+5. Movie Detail Information
+6. Fetch Actor Datas
+7. Like and DisLike for Movie
+8. Share Opinion on this movie
+9. Like and Dislike For Comments
+10. Add this movie to Favorite List
+11. Favorite Movie List Page
