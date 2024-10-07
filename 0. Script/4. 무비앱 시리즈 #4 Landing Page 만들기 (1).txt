@@ -1,0 +1,100 @@
+4. 무비앱 시리즈 #4 Landing Page 만들기 (1) ( 따라하며 배우는 리액트 노드 )
+
+1. 전체적인 Template을 간단하게 만들기
+2. Movie API에서 가져온 모든 데이터를 STATE에 넣기
+3. MainImage Component를 만들기
+4. Grid Card Component 만들기
+5. Load More Function 만들기
+---
+(client/src/components/views/LandingPage/LandingPage.js)
+import React from 'react'
+import { FaCode } from "react-icons/fa";
+import { useEffect, useState } from 'react';
+import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
+import MainImage from './Sections/MainImage';
+
+function LandingPage() {
+
+    const [Movies, setMovies] = useState([]);
+    const [MainMovieImage, setMainMovieImage] = useState(null);
+
+    useEffect(()=> {
+        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+        fetch(endpoint)
+        .then(response => response.json())
+        .then(response => {
+            console.log(response)
+            setMovies([response.results])
+            setMainMovieImage(response.results[0])
+        })
+    }, [])
+    
+    return (
+        <div style={{ width : '100%', margin: '0'}}>
+            {/* Main Image */}
+            {MainMovieImage &&
+                <MainImage
+                    image={`${IMAGE_BASE_URL}w1280${MainMovieImage.backdrop_path}`}
+                    title={MainMovieImage.original_title}
+                    text={MainMovieImage.overview}
+                />
+            }
+
+            <div style= {{ width : '85%', margin : '1rem auto'}}>
+                <h2>Movies by latest</h2>
+                <hr />
+
+                {/* Movie Grid Cards */}
+            </div>
+
+            <div style={{ display : 'flex', justifyContent : 'center' }}>
+                <button> Load More </button>
+            </div>
+
+        </div>
+    )
+}
+
+export default LandingPage
+---
+(client/src/components/views/LandingPage/Sections/MainImage.js)
+import React from 'react';
+
+function MainImage(props) {
+    return (
+        <div style={{
+                background : `linear-gradient(to bottom, rgba(0,0,0,0)
+            39%, rgba(0,0,0,0)
+            41%,rgba(0,0,0,0.65)
+            100%),
+            url('${props.image}'), #1c1c1c`,
+                height : '500px',
+                backgroundSize : '100%, cover',
+                backgroundPosition : 'center, center',
+                width: '100%',
+                position : 'relative'
+            }}>
+            <div>
+                <div style = {{ position : 'absolute', maxWidth : '500px', bottom : '2rem', marginLeft : '2rem' }}>
+                    <h2 style={{ color : 'white' }}> {props.title} </h2>
+                    <p style={{ color: 'white', fontSize : '1rem' }}> {props.text}</p>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+export default MainImage;
+---
+(client/src/components/Config.js)
+//SERVER ROUTES
+export const USER_SERVER = '/api/users';
+
+// 웹 사이트를 만들 때 수월하게 항상 켜지 않아도 이미지와 영화의 정보들을 가져 올 수 있음.
+export const API_URL = 'https://api.themoviedb.org/3/';
+export const API_KEY = 'ecd03b028f62ae8889344a89d717154b';
+
+// Failed to load resource: net::ERR_NAME_NOT_RESOLVED 에러 발생으로 인하여 주석
+// export const IMAGE_BASE_URL = 'http://image.thmdb.org/t/p/';
+export const IMAGE_BASE_URL = 'http://www.themoviedb.org/t/p/'

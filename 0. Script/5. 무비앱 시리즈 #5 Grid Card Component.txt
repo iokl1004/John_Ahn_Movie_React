@@ -1,3 +1,12 @@
+5. 무비앱 시리즈 #5 Grid Card Component
+
+1. 전체적인 Template을 간단하게 만들기				(4 완료)
+2. Movie API에서 가져온 모든 데이터를 STATE에 넣기	(4 완료)
+3. MainImage Component를 만들기					(4 완료)
+4. Grid Card Component 만들기
+5. Load More Function 만들기
+---
+(client/src/components/views/LandingPage/LandingPage.js)
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
@@ -9,30 +18,18 @@ function LandingPage() {
 
     const [Movies, setMovies] = useState([]);
     const [MainMovieImage, setMainMovieImage] = useState(null);
-    const [CurrentPage, setCurrentPage] = useState(0);
 
     useEffect(()=> {
         const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-        fetchMovies(endpoint)
-    }, [])
-
-    // 영화정보 가져오기
-    const fetchMovies = (endpoint) => {
         fetch(endpoint)
         .then(response => response.json())
         .then(response => {
             console.log(response)
-            setMovies([...Movies, ...response.results]);    // 기존 Movies state에 가져온 영화정보를 추가한다!
+            // setMovies([response.results])
+            setMovies([...Movies, ...response.results]);
             setMainMovieImage(response.results[0]);
-            setCurrentPage(response.page)
         })
-    }
-
-    // 추가 영화정보 가져오기
-    const loadMoreItems =() => {
-        const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${CurrentPage + 1}`;
-        fetchMovies(endpoint)
-    }
+    }, [])
     
     return (
         <div style={{ width : '100%', margin: '0'}}>
@@ -66,9 +63,8 @@ function LandingPage() {
 
             </div>
 
-            {/* 추가로 영화정보 가져오기 */}
             <div style={{ display : 'flex', justifyContent : 'center' }}>
-                <button onClick={loadMoreItems}> Load More </button>
+                <button> Load More </button>
             </div>
 
         </div>
@@ -76,3 +72,24 @@ function LandingPage() {
 }
 
 export default LandingPage
+---
+(client/src/components/views/commons/GridCards.js)
+import React from 'react'
+import { Col } from 'antd';
+function GridCards(props) {
+
+    return (
+        // 라지 사이즈 인 경우에는 6size
+        // 미디움 사이즈 인 경우에는 3개
+        // 가장 작은 사이즈 인 경우에는 1개
+        <Col lg={6} md={8} xs={24}>
+            <div style={{ position : 'relative' }}>
+                <a href={`/movie/${props.movieId}`}>
+                    <img style={{ width : '100%', height: '320px' }} src={props.image} alt={props.movieName} />
+                </a>
+            </div>
+        </Col>
+    )
+}
+
+export default GridCards

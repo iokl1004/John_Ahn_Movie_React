@@ -1,3 +1,12 @@
+6. 무비앱 시리즈 #6 Load More Button 만들기 ( 따라하며 배우는 리액트 노드 )
+
+1. 전체적인 Template을 간단하게 만들기				(4 완료)
+2. Movie API에서 가져온 모든 데이터를 STATE에 넣기	(4 완료)
+3. MainImage Component를 만들기					(4 완료)
+4. Grid Card Component 만들기					(5 완료)
+5. Load More Function 만들기
+---
+(client/src/components/views/LandingPage/LandingPage.js)
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
