@@ -54,6 +54,7 @@ function LandingPage() {
                     {Movies && Movies.map((movie, index) => (
                         <React.Fragment key={index}>
                             <GridCards
+                                landingPage
                                 image={movie.poster_path ?
                                     // poster_path값이 없을 경우 null값 처리
                                     `${IMAGE_BASE_URL}w500${movie.poster_path}` : null}
