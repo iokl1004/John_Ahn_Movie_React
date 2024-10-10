@@ -1,0 +1,109 @@
+11. 무비앱 시리즈 #11 Favorite Button 만들기 (3) ( 따라하며 배우는 리액트 노드 )
+
+1. Favorite Model 만들기 (9 완료)
+ - Favorite
+  - userFrom
+  - movieId
+  - movieTitle
+  - movieImage
+  - movieRunTime
+2. Favorite Button UI 만들기	(9, 10 완료)
+3. 얼마나 많은 사람이 이 영화를 Favorite 리스트에 넣었는지 그 숫자 정보 얻기
+4. 내가 이 영화를 이미 Favorite 리스트에 넣었는지 아닌지 정보 얻기
+5. 데이터를 화면에 보여주기
+---
+(client/src/components/views/MovieDetail/Sections/Favorite.js)
+import { useEffect, useState } from "react"
+import Axios from 'axios'
+
+function Favorite(props) {
+    const movieId = props.movieId;                  // Movie ID
+    const userFrom = props.userFrom;                // Login User ID
+    const movieTitle = props.movieInfo.title;
+    const moviePost = props.movieInfo.backdrop_path;
+    const movieRunTime = props.movieInfo.runtime;
+
+    const [FavoriteNumber, setFavoriteNumber] = useState(0)  // Favorite 갯수
+    const [Favorited, setFavorited] = useState(false)        // 해당 movie에 대한 Favorite 유무
+
+    useEffect(() => {
+        // 얼마나 많은 사람이 이 영화를 Favorite 리스트에 넣었는지 그 숫자 정보 얻기
+        let variables = {
+            userFrom,
+            movieId
+        }
+
+        Axios.post('/api/favorite/favoriteNumber', variables)
+            .then(response => {
+                console.log(response.data)
+                setFavoriteNumber(response.data.favoriteNumber)
+                if(response.data.success) {
+                } else {
+                    alert('숫자 정보를 가져오는데 실패 했습니다.')
+                }
+             })
+
+        // 내가 이 영화를 이미 Favorite 리스트에 넣었는지 아닌지 정보 얻기
+        Axios.post('/api/favorite/favorited', variables)
+            .then(response => {
+            if(response.data.success) {
+                setFavorited(response.data.favorited)
+            } else {
+                alert('정보를 가져오는데 실패 했습니다.')
+            }
+        })
+
+    }, [])
+
+    return (
+        <div>
+            {/* Favorite을 누르지 않았더라면 "Not Favorite" 문구 출력, 눌렀을경우 "Add to Favorite" 츨력  */}
+            <button>{Favorited ? "Not Favorite" : "Add to Favorite"} {FavoriteNumber}</button>
+        </div>
+    )
+}
+
+export default Favorite
+---
+(server/routes/favorites.js)
+const express = require('express');
+const router = express.Router();
+const { Favorite } = require('../models/Favorite');
+
+// req에는 Favorite.js 파일에서 Axios를 통하여 전달해준 아래의 값들이 담겨져 있다.
+// let variables = {
+//     userFrom,
+//     movieId
+// }
+// Axios.post('/api/favorite/favoriteNumber', variables)
+// body란? index.js 파일을 보면 bodyParser 를 이용하여 프론트에서 보내준 movieId를 받을 수 있다!
+
+router.post('/favoriteNumber', (req, res) => {
+    // mongoDB에서 favorite 숫자를 가져오기
+    Favorite.find({ "movieId" : req.body.movieId })
+    .exec(( err, info) => {
+        if(err) return res.status(400).send(err)
+        // 그 다음에 프론트에 다시 숫자 정보를 보내주기
+        res.status(200).json ({ success : true, favoriteNumber : info.length })
+    })
+})
+
+router.post('/favorited', (req, res) => { 
+    // 내가 이 영화를 Favorite 리스트에 넣었는지 정보를 DB에서 가져오기.
+    Favorite.find({ "movieId" : req.body.movieId, "userFrom" : req.body.userFrom })
+    .exec(( err, info) => {
+        if(err) return res.status(400).send(err)
+        // 그 다음에 프론트에 다시 숫자 정보를 보내주기
+
+        let result = false;
+        
+        // 내가 아직 페이보릿 영화를 넣었다면 true값 반환!
+        if(info.length !== 0 ) {
+            result = true
+        }
+        
+        res.status(200).json ({ success : true, favorited : result})
+    })
+})
+
+module.exports = router;
