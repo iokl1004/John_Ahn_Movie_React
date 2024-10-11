@@ -38,4 +38,33 @@ router.post('/favorited', (req, res) => {
     })
 })
 
+// 해당 무비를 Favorite 했을 경우, Favorite을 지운다!
+router.post('/removeFromFavorite', (req, res) => { 
+    Favorite.findOneAndDelete({ movieId : req.body.movieId, userFrom : req.body.userFrom })
+    .exec(( err, doc) => {
+        if(err) return res.status(400).send(err)
+        return res.status(200).json({ success:true, doc })
+    })
+})
+
+// 해당 무비를 Favorite 하지 않은 상태인 경우, Favorite을 한다!
+router.post('/addToFavorite', (req, res) => { 
+    // 도큐먼트 인스턴스 생성
+    const favorite = new Favorite(req.body)
+
+    favorite.save((err, doc) => {
+        if(err) return res.status(400).send(err)
+        return res.status(200).json({ success : true })
+    })
+
+})
+
+// favorite 페이지 정보 가져오기
+router.post('/getFavoredMovie', (req, res) => { 
+    Favorite.find({ 'userFrom' : req.body.userFrom })
+    .exec((err, favorites) => {
+        if(err) return res.status(400).send(err)
+        return res.status(200).json({ success : true, favorites})
+    })
+})
 module.exports = router;
